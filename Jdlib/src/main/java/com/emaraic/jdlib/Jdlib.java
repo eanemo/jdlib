@@ -13,6 +13,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
+//
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 /**
  *
  * @author Taha Emara 
@@ -26,13 +32,15 @@ public class Jdlib {
     private String faceEmbeddingModelPath;
 
     public Jdlib(String facialLandmarksModelPath, String faceEmbeddingModelPath) {
-        this.facialLandmarksModelPath = facialLandmarksModelPath;
-        this.faceEmbeddingModelPath = faceEmbeddingModelPath;
+        // This is done due to the Windows platform charater path separator
+        this.facialLandmarksModelPath = facialLandmarksModelPath.replace('\\', '/');
+        this.faceEmbeddingModelPath = faceEmbeddingModelPath.replace('\\', '/');
         loadLib();
     }
 
     public Jdlib(String facialLandmarksModelPath) {
-        this.facialLandmarksModelPath = facialLandmarksModelPath;
+        // This is done due to the Windows platform charater path separator
+        this.facialLandmarksModelPath = facialLandmarksModelPath.replace('\\', '/');
         this.faceEmbeddingModelPath = null;
         loadLib();
     }
@@ -47,6 +55,8 @@ public class Jdlib {
 
     private native ArrayList<FaceDescriptor> getFacialLandmarks(long shapePredictorHandler, long faceDetectorHandler, byte[] pixels, int h, int w);
 
+    private native ArrayList<FaceDescriptor> getFacialLandmarksWholeImage(long shapePredictorHandler, long faceDetectorHandler, byte[] pixels, int h, int w);
+
     private native ArrayList<FaceDescriptor> getFaceEmbeddings(long FaceEmbeddingHandler, long shapePredictorHandler, long faceDetectorHandler, byte[] pixels, int h, int w);
 
     private void loadLib() {
@@ -58,6 +68,9 @@ public class Jdlib {
             libpath = "/native" + File.separator + "linux" + File.separator + name;
         } else if (os.contains("mac")) {
             libpath = "/native" + File.separator + "macosx" + File.separator + name;
+        } else if (os.contains("windows")) {
+            libpath = "/native" + "/windows" + "/" + name;
+            System.out.println("Loading " + libpath + " ... ");
         } else {
             throw new java.lang.UnsupportedOperationException(os + " is not supported. Try to recompile Jdlib on your machine and then use it.");
         }
@@ -65,20 +78,19 @@ public class Jdlib {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
+            //System.out.println("Loading library " + libpath);
             inputStream = Jdlib.class.getResourceAsStream(libpath);
-            File fileOut = File.createTempFile(name, "");
+            
+            File fileOut = File.createTempFile("Jdlib", ".dll");
+            
+            // Copy file to tmp shared lib
+            Files.copy(inputStream, fileOut.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-            outputStream = new FileOutputStream(fileOut);
-            byte[] buffer = new byte[1024];
-            int read = -1;
-            while ((read = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, read);
-            }
-            outputStream.close();
             inputStream.close();
             System.load(fileOut.toString());
+            //System.out.println("Library loaded.");
         } catch (Exception e) {
-            System.err.println("Error During Loading Lib!");
+            System.err.println("Error During Loading Lib: " + e.getMessage());
         } finally {
             if (inputStream != null) {
                 try {
@@ -110,6 +122,16 @@ public class Jdlib {
     public ArrayList<FaceDescriptor> getFaceLandmarks(BufferedImage img) {
         Image image = new Image(img);
         ArrayList<FaceDescriptor> data = getFacialLandmarks(getShapePredictorHandler(facialLandmarksModelPath), getFaceDectorHandler(), image.pixels, image.height, image.width);
+        if (data == null) {
+            System.err.println("Jdlib | getFaceLandmarks | Null data!!");
+            data = new ArrayList<>(Collections.EMPTY_LIST);
+        }
+        return data;
+    }
+
+    public ArrayList<FaceDescriptor> getFaceLandmarksWholeImage(BufferedImage img) {
+        Image image = new Image(img);
+        ArrayList<FaceDescriptor> data = getFacialLandmarksWholeImage(getShapePredictorHandler(facialLandmarksModelPath), getFaceDectorHandler(), image.pixels, image.height, image.width);
         if (data == null) {
             System.err.println("Jdlib | getFaceLandmarks | Null data!!");
             data = new ArrayList<>(Collections.EMPTY_LIST);

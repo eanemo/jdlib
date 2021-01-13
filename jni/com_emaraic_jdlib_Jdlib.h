@@ -7,52 +7,60 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     com_emaraic_jdlib_Jdlib
- * Method:    getFaceDectorHandler
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_com_emaraic_jdlib_Jdlib_getFaceDectorHandler
+  /*
+   * Class:     com_emaraic_jdlib_Jdlib
+   * Method:    getFaceDectorHandler
+   * Signature: ()J
+   */
+  JNIEXPORT jlong JNICALL Java_com_emaraic_jdlib_Jdlib_getFaceDectorHandler
   (JNIEnv *, jobject);
 
-/*
- * Class:     com_emaraic_jdlib_Jdlib
- * Method:    getShapePredictorHandler
- * Signature: (Ljava/lang/String;)J
- */
-JNIEXPORT jlong JNICALL Java_com_emaraic_jdlib_Jdlib_getShapePredictorHandler
+  /*
+   * Class:     com_emaraic_jdlib_Jdlib
+   * Method:    getShapePredictorHandler
+   * Signature: (Ljava/lang/String;)J
+   */
+  JNIEXPORT jlong JNICALL Java_com_emaraic_jdlib_Jdlib_getShapePredictorHandler
   (JNIEnv *, jobject, jstring);
 
-/*
- * Class:     com_emaraic_jdlib_Jdlib
- * Method:    getFaceEmbeddingHandler
- * Signature: (Ljava/lang/String;)J
- */
-JNIEXPORT jlong JNICALL Java_com_emaraic_jdlib_Jdlib_getFaceEmbeddingHandler
+  /*
+   * Class:     com_emaraic_jdlib_Jdlib
+   * Method:    getFaceEmbeddingHandler
+   * Signature: (Ljava/lang/String;)J
+   */
+  JNIEXPORT jlong JNICALL Java_com_emaraic_jdlib_Jdlib_getFaceEmbeddingHandler
   (JNIEnv *, jobject, jstring);
 
-/*
- * Class:     com_emaraic_jdlib_Jdlib
- * Method:    faceDetect
- * Signature: (J[BII)Ljava/util/ArrayList;
- */
-JNIEXPORT jobject JNICALL Java_com_emaraic_jdlib_Jdlib_faceDetect
+  /*
+   * Class:     com_emaraic_jdlib_Jdlib
+   * Method:    faceDetect
+   * Signature: (J[BII)Ljava/util/ArrayList;
+   */
+  JNIEXPORT jobject JNICALL Java_com_emaraic_jdlib_Jdlib_faceDetect
   (JNIEnv *, jobject, jlong, jbyteArray, jint, jint);
 
-/*
- * Class:     com_emaraic_jdlib_Jdlib
- * Method:    getFacialLandmarks
- * Signature: (JJ[BII)Ljava/util/ArrayList;
- */
-JNIEXPORT jobject JNICALL Java_com_emaraic_jdlib_Jdlib_getFacialLandmarks
+  /*
+   * Class:     com_emaraic_jdlib_Jdlib
+   * Method:    getFacialLandmarks
+   * Signature: (JJ[BII)Ljava/util/ArrayList;
+   */
+  JNIEXPORT jobject JNICALL Java_com_emaraic_jdlib_Jdlib_getFacialLandmarks
   (JNIEnv *, jobject, jlong, jlong, jbyteArray, jint, jint);
 
-/*
- * Class:     com_emaraic_jdlib_Jdlib
- * Method:    getFaceEmbeddings
- * Signature: (JJJ[BII)Ljava/util/ArrayList;
- */
-JNIEXPORT jobject JNICALL Java_com_emaraic_jdlib_Jdlib_getFaceEmbeddings
+  /*
+   * Class:     com_emaraic_jdlib_Jdlib
+   * Method:    getFacialLandmarks
+   * Signature: (JJ[BII)Ljava/util/ArrayList;
+   */
+  JNIEXPORT jobject JNICALL Java_com_emaraic_jdlib_Jdlib_getFacialLandmarksWholeImage
+  (JNIEnv *, jobject, jlong, jlong, jbyteArray, jint, jint);
+
+  /*
+   * Class:     com_emaraic_jdlib_Jdlib
+   * Method:    getFaceEmbeddings
+   * Signature: (JJJ[BII)Ljava/util/ArrayList;
+   */
+  JNIEXPORT jobject JNICALL Java_com_emaraic_jdlib_Jdlib_getFaceEmbeddings
   (JNIEnv *, jobject, jlong, jlong, jlong, jbyteArray, jint, jint);
 
 #ifdef __cplusplus
